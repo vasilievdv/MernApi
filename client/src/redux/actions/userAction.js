@@ -26,7 +26,6 @@ export const signUp = (payload) => async (dispatch) => {
 };
 
 export const signIn = (payload) => async (dispatch) => {
-  console.log(payload);
   const response = await fetch(endPoints.signIn(), {
     method: 'POST',
     headers: {
@@ -37,7 +36,6 @@ export const signIn = (payload) => async (dispatch) => {
   });
   if (response.status === 200) {
     const user = await response.json();
-    console.log(user);
     dispatch(setUser(user));
   }
 };

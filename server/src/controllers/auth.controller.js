@@ -49,7 +49,6 @@ const signUp = async (req, res) => {
 };
 
 const signIn = async (req, res) => {
-  console.log(req);
   const { password, username } = req.body;
   if (password && username) {
     try {
