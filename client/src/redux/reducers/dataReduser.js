@@ -4,6 +4,8 @@ const dataReducer = (state = [], action) => {
   switch (type) {
     case 'SET_ALLUSERS':
       return payload;
+    case 'DELETE_ALLUSERS':
+      return [];
     default:
       return state;
   }

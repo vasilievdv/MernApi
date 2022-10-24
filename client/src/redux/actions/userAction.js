@@ -44,12 +44,17 @@ export const deleteUser = () => ({
   type: 'DELETE_USER',
 });
 
+export const deleteAllUsers = () => ({
+  type: 'DELETE_ALLUSERS',
+});
+
 export const signOut = () => async (dispatch) => {
   const response = await fetch(endPoints.signOut(), {
     credentials: 'include',
   });
   if (response.status === 200) {
     dispatch(deleteUser());
+    dispatch(deleteAllUsers());
   }
 };
 
