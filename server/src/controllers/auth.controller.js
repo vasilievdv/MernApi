@@ -34,10 +34,10 @@ const signUp = async (req, res) => {
       if (candidate) {
         return res.status(400).json({ message: 'Пользователь с таким именем уже существует' });
       }
-      req.session.user = {
-        id: user.id,
-        name: user.username,
-      };
+      // req.session.user = {
+      //   id: user.id,
+      //   name: user.username,
+      // };
       file.mv(`./uploads/${photo}`);
       await user.save();
       return res.json({ message: 'Пользователь успешно зарегистрирован', name: user.username });

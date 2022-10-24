@@ -3,12 +3,22 @@ const User = require('../../db/models/User');
 
 const editUser = async (req, res) => {
   const data = JSON.parse(req.body.data);
-  const {
-    username, password,
-  } = data;
+  let username = null;
+  let password = null;
+
+  if (data.username) {
+    username = data.username;
+  }
+
+  let hashedPassword = null;
+
+  if (data.password) {
+    password = data.password;
+    const salt = await bcrypt.genSalt(10);
+    hashedPassword = await bcrypt.hash(password, salt);
+  }
+
   const { id } = req.session.user;
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
 
   function checkData(user, pass, phot) {
     const obj = {};
