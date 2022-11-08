@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Resizer from 'react-image-file-resizer';
 import { signUp } from '../../../redux/actions/userAction';
 
 function SignUp() {
@@ -14,13 +15,41 @@ function SignUp() {
 
   const dispatch = useDispatch();
 
-  const submitHandler = (e) => {
+  const resizeFile = (file) => new Promise((resolve) => {
+    Resizer.imageFileResizer(
+      file,
+      300,
+      300,
+      'JPEG',
+      100,
+      0,
+      (uri) => {
+        resolve(uri);
+      },
+      'file',
+    );
+  });
+
+  function isFileImage(image) {
+    const acceptedImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+
+    return image && acceptedImageTypes.includes(image.type);
+  }
+
+  const submitHandler = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     const data = JSON.stringify(userSignUp);
     formData.append('data', data);
-    const file = uploadFile[0];
-    formData.append('file', file);
+    const image = uploadFile[0];
+    if (isFileImage(image)) {
+      try {
+        const file = await resizeFile(image);
+        formData.append('file', file);
+      } catch (err) {
+        console.log(err);
+      }
+    }
     dispatch(signUp(formData));
   };
 

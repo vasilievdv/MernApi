@@ -17,7 +17,6 @@ export const deleteError = (status) => ({
 export const signUp = (payload) => async (dispatch) => {
   axios.post(endPoints.signUp(), payload)
     .then((response) => {
-      // dispatch(setUser(response.data));
       dispatch(deleteError(response.data));
     })
     .catch((error) => {
