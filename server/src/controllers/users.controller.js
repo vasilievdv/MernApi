@@ -49,6 +49,9 @@ const editUser = async (req, res) => {
     if (password && password.length < 6) {
       return res.status(400).json({ message: 'Пароль должен быть длиннее 6 символов' });
     }
+    if (username && username.length < 3) {
+      return res.status(400).json({ message: '"Name" должно состоять минимум из 3x символов' });
+    }
     try {
       const candidate = await User.findOne({ username });
       if (candidate) {
