@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
 import { editUser } from '../../../redux/actions/userAction';
+import isFileImage from '../../../utils/helpers/isFileImage.helpers';
+import resizeFile from '../../../utils/helpers/resizeFile.helpers';
 
 function SignUp() {
   const error = useSelector((state) => state.error);
@@ -17,13 +18,20 @@ function SignUp() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     const data = JSON.stringify(userEditUser);
     formData.append('data', data);
-    const file = uploadFile[0];
-    formData.append('file', file);
+    const image = uploadFile[0];
+    if (isFileImage(image)) {
+      try {
+        const file = await resizeFile(image);
+        formData.append('file', file);
+      } catch (err) {
+        console.log(err);
+      }
+    }
     dispatch(editUser(formData, navigate));
   };
 

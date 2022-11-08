@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const fs = require('fs').promises;
 const User = require('../../db/models/User');
 
 const editUser = async (req, res) => {
@@ -34,13 +35,16 @@ const editUser = async (req, res) => {
     return obj;
   }
 
-  if (username || password) {
+  if (username || password || req.files) {
     let photo = null;
     if (req.files) {
       const { file } = req.files;
       const { name } = req.files.file;
       photo = `${new Date().toISOString()}-${name}`;
       file.mv(`./uploads/${photo}`);
+      const candidateById = await User.findOne({ id });
+      const filePath = `./uploads/${candidateById.photo}`;
+      fs.unlink(filePath);
     }
     if (password && password.length < 6) {
       return res.status(400).json({ message: 'Пароль должен быть длиннее 6 символов' });
@@ -57,7 +61,8 @@ const editUser = async (req, res) => {
         checkData(username, password, photo),
         { new: true },
       );
-      return res.json({ id, name: username });
+      const candidateById = await User.findOne({ id });
+      return res.json({ id, name: candidateById.username });
     } catch (error) {
       return res.sendStatus(500);
     }
